@@ -1,0 +1,5 @@
+clear
+house
+radio
+noise
+alarm
