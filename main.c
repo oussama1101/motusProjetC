@@ -15,7 +15,7 @@ char *digitToStr(int n) {
     char *numbers[] = {"One", "Two", "Three", "Four", "Five", "Six", "Seven"};
     return numbers[n-1];
 }
-
+    //test
 int validWord(char *word, int len) {
     int valid = 0;
     if(!((word[0] >= 65 && word[0] <= 90) || (word[0] >= 97 && word[0] <= 122)))
