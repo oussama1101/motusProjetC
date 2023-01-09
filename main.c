@@ -3,6 +3,6 @@
 #include "menu.c"
 
 int main(int argc, char const *argv[]) {
-    commencerPartie();
+    menuPrincipale();
     return 0;
 }

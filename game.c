@@ -3,7 +3,25 @@
 #include <time.h> 
 #include <string.h>
 #include <sys/time.h>
+#include <unistd.h>
 #include "header.c"
+
+typedef enum { JOUEUR, ORDINATEUR } Versus ;
+typedef enum { ANGLAIS, FRANCAIS } Language ;
+typedef enum { FACILE, MOYENNE, DIFFICILE } Difficulte ;
+
+typedef struct UserPreferences{
+    Versus vs;
+    Language lang;
+    Difficulte diff;
+} UserPreferences;
+
+typedef struct gameInfo{
+    char* playerName;
+    char* date;
+    char* correctWord;
+    int timePlayed;
+} GameInfo;
 
 char toLower(char c) {
     if(c >= 'a' && c <= 'z')
@@ -55,16 +73,46 @@ void randomWord(char *fileName, char *word) {
 }
 
 
-void core() {
-
+void core(UserPreferences *up) {
+    GameInfo *gi = (GameInfo*)malloc(sizeof(GameInfo));
+    gi->playerName = (char*)malloc(60 * sizeof(char));
     printf("\033[2J\033[1;1H");
     header();
-
+    printf("\033[34m");printf("  [");
+    printf("\033[33m");printf("!");
+    printf("\033[34m");printf("]");
+    printf("\033[37m");printf(" Veuillez entrer votre ");
+    printf("\033[34m");printf("Nom");
+    printf("\033[37m");printf(" pour continuer : ");
+    scanf("%s", gi->playerName);
     struct timeval start_time,end_time;
     gettimeofday(&start_time, NULL);
-
     char *word = malloc(5*sizeof(char)), *gWord = malloc(60 * sizeof(char));
-    randomWord("eng.txt", word);
+    if (up->vs == ORDINATEUR)
+        randomWord("eng.txt", word);
+    else {
+        printf("\033[34m");printf("  [");
+        printf("\033[33m");printf("Joueur 1");
+        printf("\033[34m");printf("]");
+        printf("\033[37m");printf(" Veuillez entrer le ");
+        printf("\033[34m");printf("Mot");
+        printf("\033[37m");printf(" a deviner : ");
+        scanf("%s", word);
+        sleep(1);
+        printf("\x1b[1F");
+        printf("\x1b[2K");
+        printf("\033[34m");printf("  [");
+        printf("\033[33m");printf("Joueur 1");
+        printf("\033[34m");printf("]");
+        printf("\033[37m");printf(" a entre le mot a deviner ! \n");
+        printf("\033[33m");printf("  +");
+        printf("\033[36m");printf("----------------------------------------------------------");
+        printf("\033[33m");printf("+\n");
+        printf("\033[34m");printf("  [");
+        printf("\033[33m");printf("Joueur 2");
+        printf("\033[34m");printf("]");
+        printf("\033[37m");printf(" a vous de jouer maintenant !\n");
+    }
     //printf("\n%s\n", word);
     int attempts = 0, exit = 0;
     do {

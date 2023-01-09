@@ -30,11 +30,10 @@ void chargeroptions(char* liste[],int n,char* titre){
     printf("\033[34m");printf("]");
     printf("\033[37m");printf(" Veuillez choisir un ");
     printf("\033[34m");printf("N");
-    printf("\033[37m");printf(" pour continuer :");
+    printf("\033[37m");printf(" pour continuer : ");
 }
 
-void ChoixDifficulte(){
-
+void ChoixDifficulte(UserPreferences *up){
     int choice =0;
     char *menu[] = {
         " Facile ",
@@ -50,13 +49,16 @@ void ChoixDifficulte(){
         scanf("%d",&choice);
         switch ( choice ){
         case 1:
-            printf("You typed 1");
+            up->diff = FACILE;
+            core(up);
             break;
         case 2:
-            core();
+            up->diff = MOYENNE;
+            core(up);
             break;
         case 3:
-            printf("You typed 3");
+            up->diff = DIFFICILE;
+            core(up);
             break;
         case 4:
             printf("You typed 4");
@@ -70,7 +72,7 @@ void ChoixDifficulte(){
     }
 }
 
-void ChoixDictionnaire(){
+void ChoixDictionnaire(UserPreferences *up){
     int choice =0;
     char *menu[] = {
         " Francais ",
@@ -81,19 +83,18 @@ void ChoixDictionnaire(){
     while (choice != 4) {
         printf("\033[2J\033[1;1H");
         header();
-        chargeroptions(menu,4," Choix de langue ");
-        scanf("%d",&choice);
+        chargeroptions(menu, 4, " Choix de langue ");
+        scanf("%d", &choice);
         switch ( choice ){
-            case 1:
-                printf("You typed 1"); //FRANCAIS 
-                ChoixDifficulte();
+            case 1: //FRANCAIS
+                up->lang = FRANCAIS;
+                ChoixDifficulte(up);
                 break;
-            case 2:
-                printf("You typed 2"); //ANGLAIS
-                ChoixDifficulte();
+            case 2: //ANGLAIS
+                up->lang = ANGLAIS;
+                ChoixDifficulte(up);
                 break;
-            case 3:
-                printf("You typed 3"); //RETOUR DE 
+            case 3: //RETOUR VERS NOUVELLE PARTIE
                 break;
             case 4:
                 exit(0);
@@ -105,7 +106,7 @@ void ChoixDictionnaire(){
 }
 
 void nouvellePartie(){
-
+    UserPreferences *up = (UserPreferences*)malloc(sizeof(UserPreferences));
     int choice =0;
     char *menu[] = {
         " Partie contre ordinateur ",
@@ -120,11 +121,12 @@ void nouvellePartie(){
     scanf("%d",&choice);
     switch ( choice ){
     case 1: //JOUER CONTRE ORDI
-        ChoixDictionnaire();
-        printf("You typed 1");
+        up->vs = ORDINATEUR;
+        ChoixDictionnaire(up);
         break;
     case 2: //JOUER CONTRE JOUEUR
-        printf("You typed 2");
+        up->vs = JOUEUR;
+        core(up);
         break;
     case 3: //RETOUR AU MENU PRINCIPALE
         break;
@@ -137,7 +139,7 @@ void nouvellePartie(){
     }
 }
 
-void commencerPartie(){
+void menuPrincipale(){
     int choice = 0;
     while (choice != 4) {
         char *menu[] = {" Commencer une nouvelle partie "," Charger une partie deja existante "," Aide en ligne"," Quitter "};
