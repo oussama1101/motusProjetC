@@ -57,8 +57,7 @@ void randomWord(char *fileName, char *word) {
 
 
 
-int main(int argc, char const *argv[])
-{
+int main(int argc, char const *argv[]) {
 
     struct timeval start_time,end_time;
     gettimeofday(&start_time, NULL);
