@@ -101,8 +101,6 @@ void core(UserPreferences *up) {
     gi->playerName = (char*)malloc(60 * sizeof(char));
     printf("\033[2J\033[1;1H");
     header();
-        printf(" wORD COUNT %d\n",lineCount("eng.txt"));
-
     printf("\033[34m");printf("  [");
     printf("\033[33m");printf("!");
     printf("\033[34m");printf("]");
