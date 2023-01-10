@@ -110,7 +110,7 @@ void core(UserPreferences *up) {
     int diff = 0;
     GameInfo *gi = (GameInfo*)malloc(sizeof(GameInfo));
     gi->playerName = (char*)malloc(60 * sizeof(char));
-    printf("\033[2J\033[1;1H");
+    printf("\033[2J\033[1;1H"); //clear the terminal
     header();
     printf("\033[34m");printf("  [");
     printf("\033[33m");printf("!");
@@ -120,8 +120,8 @@ void core(UserPreferences *up) {
     printf("\033[37m");printf(" pour continuer : ");
     scanf("%s", gi->playerName);
     sleep(1);
-    printf("\x1b[1F");
-    printf("\x1b[2K");
+    printf("\x1b[1F"); // monter le curseur en haut 
+    printf("\x1b[2K"); // supprimer la ligne de l'affichage
     printf("\033[37m");printf("  Nom du joueur : ");
     printf("\033[33m");printf(" %s \n",gi->playerName);
     printf("\033[37m");printf("  Le mot est en :");
@@ -155,6 +155,7 @@ void core(UserPreferences *up) {
     printf("\033[33m");printf("  +");
     printf("\033[36m");printf("----------------------------------------------------------");
     printf("\033[33m");printf("+\n");
+    printf("\033[39m");
     
     struct timeval start_time,end_time;
     gettimeofday(&start_time, NULL);
