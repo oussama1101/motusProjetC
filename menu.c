@@ -61,7 +61,6 @@ void ChoixDifficulte(UserPreferences *up){
             core(up);
             break;
         case 4:
-            printf("You typed 4");
             break;
         case 5:
             exit(0);
@@ -155,10 +154,9 @@ void menuPrincipale(){
                 printf("You typed 2");
                 break;
             case 3:
-                printf("You typed 3");
+                printf("Vous pouvez visitez ce lien : ");
                 break;
             case 4:
-                printf("You typed 4");
                 break;
             default:
                 printf("You typed a wrong number !");
