@@ -34,21 +34,16 @@ char *digitToStr(int n) {
     return numbers[n-1];
 }
 
-int lineCount(char* filename){
+int lineCount(char* filename) {
  FILE *file;
     int lines = 0;
     char ch;
-
-    // open the file in read mode
     file = fopen(filename, "r");
-
-    // count the number of lines in the file
     while ((ch = fgetc(file)) != EOF) {
         if (ch == '\n') {
             lines++;
         }
     }
-    // close the file
     fclose(file);
     return lines+1;
 }
@@ -83,7 +78,7 @@ int validWord(char *word, int len) {
 
 void randomWord(char *fileName, char *word) {
     FILE *f = fopen(fileName, "r");
-    int i = 1, n = 5, r;
+    int i = 1, n = lineCount(fileName), r;
     srand(time(0));  
     r = (rand()%n+1);
     while (!feof(f)) {
@@ -95,8 +90,24 @@ void randomWord(char *fileName, char *word) {
     fclose(f);
 }
 
+void fileChooser(char *fileName, int len) {
+    strncat(fileName, "dictionary/", (int)strlen("dictionary/")+1);
+    strncat(fileName, "WordOf", (int)strlen("WordOf")+1);
+    strncat(fileName, digitToStr(len), (int)strlen(digitToStr(len))+1);
+    char c = '/';
+    strncat(fileName, &c, (int)strlen(&c));
+    srand(time(0));  
+    c = rand()%26+97;
+    strncat(fileName, &c, (int)strlen(&c));
+    strncat(fileName, "WordOf", (int)strlen("WordOf")+1);
+    strncat(fileName, digitToStr(len), (int)strlen(digitToStr(len))+1);
+    strncat(fileName, ".txt", (int)strlen(".txt")+1);
+    printf("\n%s\n", fileName);
+}
+
 
 void core(UserPreferences *up) {
+    int diff = 0;
     GameInfo *gi = (GameInfo*)malloc(sizeof(GameInfo));
     gi->playerName = (char*)malloc(60 * sizeof(char));
     printf("\033[2J\033[1;1H");
@@ -125,14 +136,17 @@ void core(UserPreferences *up) {
     printf("\033[37m");printf("  La difficulte du jeu est :");
     switch(up->diff){
         case FACILE:
+            diff = 4;
             printf("\033[33m");printf(" FACILE \n");
-            printf("\033[37m");printf("  Le mot se compose de \033[33m 4 LETTRES \n");                
+            printf("\033[37m");printf("  Le mot se compose de \033[33m 4 LETTRES \n");
         break;
         case MOYENNE:
+            diff = 5;
             printf("\033[33m");printf(" MOYENNE \n");
-            printf("\033[37m");printf("  Le mot se compose de \033[33m 5 LETTRES \n");  
+            printf("\033[37m");printf("  Le mot se compose de \033[33m 5 LETTRES \n");
         break;
         case DIFFICILE:
+            diff = 6;
             printf("\033[33m");printf(" DIFFICILE \n");
             printf("\033[37m");printf("  Le mot se compose de \033[33m 6 LETTRES \n");  
         break;
@@ -144,20 +158,15 @@ void core(UserPreferences *up) {
     
     struct timeval start_time,end_time;
     gettimeofday(&start_time, NULL);
-    char *word = malloc(5*sizeof(char)), *gWord = malloc(60 * sizeof(char));
-    int diff = 0;
-    if(up->diff == DIFFICILE)
-        diff = 6;
-    else if(up->diff == MOYENNE)
-        diff = 5;
-    else if(up->diff == FACILE)
-        diff = 4;
-    if(up->vs == ORDINATEUR)
+    char *word = malloc(60*sizeof(char)), *gWord = malloc(60 * sizeof(char));
+    if(up->vs == ORDINATEUR) {
+        char *fileName = malloc(30 * sizeof(char));
+        fileChooser(fileName, diff);
         if(up->lang == ANGLAIS)
-            randomWord("eng.txt", word);
+            randomWord(fileName, word);
         else
             randomWord("fr.txt", word);
-    else {
+    } else {
         printf("\033[34m");printf("  [");
         printf("\033[33m");printf("Joueur 1");
         printf("\033[34m");printf("]");
@@ -180,7 +189,7 @@ void core(UserPreferences *up) {
         printf("\033[34m");printf("]");
         printf("\033[37m");printf(" a vous de jouer maintenant !\n");
     }
-    //printf("\n%s\n", word);
+    printf("\n%s\n", word);
     int attempts = 0, exit = 0;
     do {
         int color[diff];
