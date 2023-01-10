@@ -125,7 +125,7 @@ void nouvellePartie(){
         break;
     case 2: //JOUER CONTRE JOUEUR
         up->vs = JOUEUR;
-        core(up);
+        ChoixDictionnaire(up);
         break;
     case 3: //RETOUR AU MENU PRINCIPALE
         break;
