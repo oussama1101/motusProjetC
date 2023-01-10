@@ -48,7 +48,7 @@ int validWord(char *word, int len) {
     strncat(fileName, "WordOf", (int)strlen("WordOf")+1);
     strncat(fileName, digitToStr(len), (int)strlen(digitToStr(len))+1);
     strncat(fileName, ".txt", (int)strlen(".txt")+1);
-    printf("\n%s\n", fileName);
+    //printf("\n%s\n", fileName);
     FILE *f = fopen(fileName, "r");
     char *dicWord = malloc(5*sizeof(char));
     while (!feof(f)) {
