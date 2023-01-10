@@ -38,13 +38,17 @@ int validWord(char *word, int len) {
     int valid = 0;
     if(!((word[0] >= 65 && word[0] <= 90) || (word[0] >= 97 && word[0] <= 122)))
         return 0;
-    char c = toLower(word[0]);
-    char fileName[30] = "dictionary/wordOfFive/";
+    char fileName[30] = "dictionary/";
+    strncat(fileName, "WordOf", (int)strlen("WordOf")+1);
+    strncat(fileName, digitToStr(len), (int)strlen(digitToStr(len))+1);
+    char c = '/';
+    strncat(fileName, &c, (int)strlen(&c));
+    c = toLower(word[0]);
     strncat(fileName, &c, (int)strlen(&c));
     strncat(fileName, "WordOf", (int)strlen("WordOf")+1);
     strncat(fileName, digitToStr(len), (int)strlen(digitToStr(len))+1);
     strncat(fileName, ".txt", (int)strlen(".txt")+1);
-    //printf("\n%s\n", fileName);
+    printf("\n%s\n", fileName);
     FILE *f = fopen(fileName, "r");
     char *dicWord = malloc(5*sizeof(char));
     while (!feof(f)) {
