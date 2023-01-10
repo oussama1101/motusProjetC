@@ -88,8 +88,18 @@ void core(UserPreferences *up) {
     struct timeval start_time,end_time;
     gettimeofday(&start_time, NULL);
     char *word = malloc(5*sizeof(char)), *gWord = malloc(60 * sizeof(char));
-    if (up->vs == ORDINATEUR)
-        randomWord("eng.txt", word);
+    int diff = 0;
+    if(up->diff == DIFFICILE)
+        diff = 6;
+    else if(up->diff == MOYENNE)
+        diff = 5;
+    else if(up->diff == FACILE)
+        diff = 4;
+    if(up->vs == ORDINATEUR)
+        if(up->lang == ANGLAIS)
+            randomWord("eng.txt", word);
+        else
+            randomWord("fr.txt", word);
     else {
         printf("\033[34m");printf("  [");
         printf("\033[33m");printf("Joueur 1");
@@ -116,19 +126,22 @@ void core(UserPreferences *up) {
     //printf("\n%s\n", word);
     int attempts = 0, exit = 0;
     do {
-        int color[5] = {0, 0, 0, 0, 0};
+        int color[diff];
+        for(int i = 0; i < diff; i++) {
+            color[i] = 0;
+        }
         scanf("%s", gWord);
         if(!strcmp(gWord, "exit")) {
             printf("the right anwser is \033[32m%s\033[39m\n", word);
             break;
         }
-        if(!validWord(gWord, 5)) {
+        if(!validWord(gWord, diff)) {
             printf("\x1b[1F");
             printf("\x1b[2K");
         } else {
             attempts++;
-            for(int i = 0; i < 5; i++) {
-                for(int j = 0; j < 5; j++) {
+            for(int i = 0; i < diff; i++) {
+                for(int j = 0; j < diff; j++) {
                     if(gWord[i] == word[j]){
                         color[i] = 1;
                         if(i==j)
@@ -138,7 +151,7 @@ void core(UserPreferences *up) {
             }
             printf("\x1b[1F");
             printf("\x1b[2K");
-            for (int i = 0; i < 5; i++) {
+            for (int i = 0; i < diff; i++) {
                 if(color[i] == 2) {
                     printf("\033[32m%c", gWord[i]);
                 } else if (color[i] == 1) {
@@ -150,7 +163,7 @@ void core(UserPreferences *up) {
             }
             printf("\n\033[39m");
             exit = 1;
-            for (int i = 0; i < 5; i++) {
+            for (int i = 0; i < diff; i++) {
                 if(color[i] != 2) {
                     exit = 0;
                     break;
