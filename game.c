@@ -34,6 +34,25 @@ char *digitToStr(int n) {
     return numbers[n-1];
 }
 
+int lineCount(char* filename){
+ FILE *file;
+    int lines = 0;
+    char ch;
+
+    // open the file in read mode
+    file = fopen(filename, "r");
+
+    // count the number of lines in the file
+    while ((ch = fgetc(file)) != EOF) {
+        if (ch == '\n') {
+            lines++;
+        }
+    }
+    // close the file
+    fclose(file);
+    return lines+1;
+}
+
 int validWord(char *word, int len) {
     int valid = 0;
     if(!((word[0] >= 65 && word[0] <= 90) || (word[0] >= 97 && word[0] <= 122)))
