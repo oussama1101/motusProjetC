@@ -183,13 +183,14 @@ void getPath(GameInfo *gameInfo, char *path) {
     strncat(path, ".txt", (int)strlen(".txt")+1);
 }
 
-void saveInfo(GameInfo *gi){
+void saveInfo(GameInfo *gi, UserPreferences *up){
     FILE *filePtr;
     char path[50] = "saves/";
     getPath(gi, path);
     filePtr = fopen(path,"w");
     if (filePtr != NULL) {
-        fprintf(filePtr, "%s\t%s\t%s\n", gi->playerName, gi->date, gi->correctWord);     
+        fprintf(filePtr, "%d\t%d\t%d\n", up->vs, up->lang, up->diff);
+        fprintf(filePtr, "%s\t%s\t%s\n", gi->playerName, gi->date, gi->correctWord);
     }
     fclose(filePtr); // On ferme le fichier qui a été ouvert
 }
@@ -285,7 +286,7 @@ void core(UserPreferences *up) {
     }
     gi->correctWord = word;
     gi->date = getCurrentTime();
-    printf("%s\n",gi->date);    
+    //printf("%s\n",gi->date);
     //printf("\n%s\n", word);
     int attempts = 0, exit = 0;
     //printf("%s\n",gi->playerName);
@@ -306,7 +307,7 @@ void core(UserPreferences *up) {
         } else {
             attempts++;
             if(attempts == 1)
-                saveInfo(gi);
+                saveInfo(gi, up);
             saveWord(gi, gWord);
             for(int i = 0; i < diff; i++) {
                 for(int j = 0; j < diff; j++) {
