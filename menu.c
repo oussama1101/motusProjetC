@@ -21,7 +21,7 @@ void chargeroptions(char* liste[],int n,char* titre){
         printf("  |  ");printf("\033[34m");
         printf("[");printf("\033[36m");printf("%d",i+1);printf("\033[34m");printf("]");
         printf("\033[37m");printf("  |");
-        printf("\033[32m");printf("%s",liste[i]);
+        printf("\033[32m");printf(" %s",liste[i]);
         printf("\033[37m");printf("\n");
     }
     printf("\033[36m");printf("  +");
@@ -38,11 +38,11 @@ void chargeroptions(char* liste[],int n,char* titre){
 void ChoixDifficulte(UserPreferences *up){
     int choice =0;
     char *menu[] = {
-        " Facile ",
-        " Moyenne ",
-        " Difficle ",
-        " Retour ",
-        " Quitter ",
+        "Facile ",
+        "Moyenne ",
+        "Difficle ",
+        "Retour ",
+        "Quitter ",
     };
     while (choice != 5) {
         printf("\033[2J\033[1;1H");
@@ -76,10 +76,10 @@ void ChoixDifficulte(UserPreferences *up){
 void ChoixDictionnaire(UserPreferences *up){
     int choice =0;
     char *menu[] = {
-        " Francais ",
-        " Anglais ",
-        " Retour ",
-        " Quitter ",
+        "Francais ",
+        "Anglais ",
+        "Retour ",
+        "Quitter ",
     };
     while (choice != 4) {
         printf("\033[2J\033[1;1H");
@@ -110,10 +110,10 @@ void nouvellePartie(){
     UserPreferences *up = (UserPreferences*)malloc(sizeof(UserPreferences));
     int choice =0;
     char *menu[] = {
-        " Partie contre ordinateur ",
-        " Partie contre Joueur ",
-        " Retour ",
-        " Quitter ",
+        "Partie contre ordinateur ",
+        "Partie contre Joueur ",
+        "Retour ",
+        "Quitter ",
     };
     while (choice != 3) {
     printf("\033[2J\033[1;1H");
@@ -164,7 +164,7 @@ void listOfGames(){
     
     do{
         scanf("%d",&choice);
-    }while(choice > i);
+    } while(choice > i);
     loadGame(menu[choice-1]);
     
 
@@ -172,7 +172,12 @@ void listOfGames(){
 void menuPrincipale(){
     int choice = 0;
     while (choice != 4) {
-        char *menu[] = {" Commencer une nouvelle partie "," Charger une partie deja existante "," Aide en ligne"," Quitter "};
+        char *menu[] = {
+            "Commencer une nouvelle partie ",
+            "Charger une partie deja existante ",
+            "Aide en ligne",
+            "Quitter "
+        };
         printf("\033[2J\033[1;1H");
         header();
         chargeroptions(menu,4," MENU ");
