@@ -161,13 +161,12 @@ void listOfGames(){
         closedir(d);
     }
     chargeroptions(menu,i," Liste des sauvegardes ");
-    
-    do{
+    do {
         scanf("%d",&choice);
     } while(choice > i);
-    loadGame(menu[choice-1]);
-    
-
+    char path[100] = "saves/";
+    strncat(path, menu[choice-1], (int)strlen(menu[choice-1])+1);
+    loadGame(path);
 }
 void menuPrincipale(){
     int choice = 0;

@@ -1,0 +1,5 @@
+1	0	1
+oussama	Sat_Jan_14_21:38:01_2023	cedes
+clear
+table
+color
