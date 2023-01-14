@@ -176,33 +176,29 @@ char* getCurrentTime(){
     return currentTime;
 }
 
-void saveInfo(GameInfo *gameInfo){
+void getPath(GameInfo *gameInfo, char *path) {
+    strncat(path, gameInfo->playerName , (int)strlen(gameInfo->playerName)+1);
+    strncat(path, "_", (int)strlen("_")+1);
+    strncat(path, gameInfo->date , (int)strlen(gameInfo->date)+1);
+    strncat(path, ".txt", (int)strlen(".txt")+1);
+}
+
+void saveInfo(GameInfo *gi){
     FILE *filePtr;
-    char savePath[50] = "saves/";
-    strncat(savePath, gameInfo->playerName , (int)strlen(gameInfo->playerName)+1);
-    strncat(savePath, "_", (int)strlen("_")+1);
-    strncat(savePath, gameInfo->date , (int)strlen(gameInfo->date)+1);
-    strncat(savePath, ".txt", (int)strlen(".txt")+1);
-    filePtr = fopen(savePath,"w");
+    char path[50] = "saves/";
+    getPath(gi, path);
+    filePtr = fopen(path,"w");
     if (filePtr != NULL) {
-        fprintf(filePtr, "%s\t%s\t%s\n", gameInfo->playerName, gameInfo->date, gameInfo->correctWord);     
+        fprintf(filePtr, "%s\t%s\t%s\n", gi->playerName, gi->date, gi->correctWord);     
     }
     fclose(filePtr); // On ferme le fichier qui a été ouvert
 }
 
-char *getPath(GameInfo *gameInfo, char *path) {
-    char savePath[50] = "saves/";
-    strncat(savePath, gameInfo->playerName , (int)strlen(gameInfo->playerName)+1);
-    strncat(savePath, "_", (int)strlen("_")+1);
-    strncat(savePath, gameInfo->date , (int)strlen(gameInfo->date)+1);
-    strncat(savePath, ".txt", (int)strlen(".txt")+1);
-    strcpy(path, saveInfo);
-}
-
 void saveWord(GameInfo* gi, char* gWord){
     FILE *filePtr;
-    char *path = (char*)malloc(60 * sizeof(char));
-    filePtr = fopen(getPath(gi, path), "w");
+    char path[50] = "saves/";
+    getPath(gi, path);
+    filePtr = fopen(path, "a");
     if (filePtr != NULL) {
         fprintf(filePtr, "%s\n", gWord);   
     }
@@ -346,6 +342,9 @@ void core(UserPreferences *up) {
     gettimeofday(&end_time, NULL);
     printf("Your number of attempts is %i\n", attempts);
     printf("seconds : %ld\n", end_time.tv_sec - start_time.tv_sec);
+    char path[50] = "saves/";
+    getPath(gi, path);
+    remove(path);
     getchar();
     getchar();
 }
