@@ -105,12 +105,74 @@ void fileChooser(char *fileName, int len) {
     printf("\n%s\n", fileName);
 }
 
+char* verifyUserWord(UserPreferences* up){
+     char* fileName = malloc(30 * sizeof(char));
+     char* word =  malloc(30 * sizeof(char));
+    switch (up->lang){
+        case ANGLAIS:
+                switch(up->diff){
+                    case FACILE:
+                            do{
+                                printf("\033[34m");printf("  [");
+                                printf("\033[33m");printf("Joueur 1");
+                                printf("\033[34m");printf("]");
+                                printf("\033[37m");printf(" Veuillez entrer le ");
+                                printf("\033[34m");printf("Mot");
+                                printf("\033[37m");printf(" a deviner : ");
+                                scanf("%s",word);
+                                    printf("\x1b[1F"); // monter le curseur en haut 
+                                    printf("\x1b[2K"); // supprimer la ligne de l'affichage
+                            }while(!validWord(word,4));
+                            return word;
+                        break;
+                    case MOYENNE:
+                            do{
+                                printf("\033[34m");printf("  [");
+                                printf("\033[33m");printf("Joueur 1");
+                                printf("\033[34m");printf("]");
+                                printf("\033[37m");printf(" Veuillez entrer le ");
+                                printf("\033[34m");printf("Mot");
+                                printf("\033[37m");printf(" a deviner : ");
+                                scanf("%s",word);
+                                    printf("\x1b[1F"); // monter le curseur en haut 
+                                    printf("\x1b[2K"); // supprimer la ligne de l'affichage
+                            }while(!validWord(word,5));
+                            return word;
 
+                        break;
+                    case DIFFICILE:
+                            do{
+                                printf("\033[34m");printf("  [");
+                                printf("\033[33m");printf("Joueur 1");
+                                printf("\033[34m");printf("]");
+                                printf("\033[37m");printf(" Veuillez entrer le ");
+                                printf("\033[34m");printf("Mot");
+                                printf("\033[37m");printf(" a deviner : ");
+                                scanf("%s",word);
+                                    printf("\x1b[1F"); // monter le curseur en haut 
+                                    printf("\x1b[2K"); // supprimer la ligne de l'affichage
+                            }while(!validWord(word,4));
+                            return word;
+                        break;
+                }
+            break;
+        /*case FRANCAIS:
+                switch(up->diff){
+                    case FACILE:
+                        break;
+                    case MOYENNE:
+                        break;
+                    case DIFFICILE:
+                        break;
+                }
+            break;*/
+}
+}
 void core(UserPreferences *up) {
     int diff = 0;
     GameInfo *gi = (GameInfo*)malloc(sizeof(GameInfo));
     gi->playerName = (char*)malloc(60 * sizeof(char));
-    printf("\033[2J\033[1;1H");
+    printf("\033[2J\033[1;1H"); //clear the terminal
     header();
     printf("\033[34m");printf("  [");
     printf("\033[33m");printf("!");
@@ -120,8 +182,8 @@ void core(UserPreferences *up) {
     printf("\033[37m");printf(" pour continuer : ");
     scanf("%s", gi->playerName);
     sleep(1);
-    printf("\x1b[1F");
-    printf("\x1b[2K");
+    printf("\x1b[1F"); // monter le curseur en haut 
+    printf("\x1b[2K"); // supprimer la ligne de l'affichage
     printf("\033[37m");printf("  Nom du joueur : ");
     printf("\033[33m");printf(" %s \n",gi->playerName);
     printf("\033[37m");printf("  Le mot est en :");
@@ -155,6 +217,7 @@ void core(UserPreferences *up) {
     printf("\033[33m");printf("  +");
     printf("\033[36m");printf("----------------------------------------------------------");
     printf("\033[33m");printf("+\n");
+    printf("\033[39m");
     
     struct timeval start_time,end_time;
     gettimeofday(&start_time, NULL);
@@ -167,13 +230,7 @@ void core(UserPreferences *up) {
         else
             randomWord("fr.txt", word);
     } else {
-        printf("\033[34m");printf("  [");
-        printf("\033[33m");printf("Joueur 1");
-        printf("\033[34m");printf("]");
-        printf("\033[37m");printf(" Veuillez entrer le ");
-        printf("\033[34m");printf("Mot");
-        printf("\033[37m");printf(" a deviner : ");
-        scanf("%s", word);
+        word = verifyUserWord(up);
         sleep(1);
         printf("\x1b[1F");
         printf("\x1b[2K");
