@@ -189,7 +189,7 @@ void core(UserPreferences *up) {
         printf("\033[34m");printf("]");
         printf("\033[37m");printf(" a vous de jouer maintenant !\n");
     }
-    printf("\n%s\n", word);
+    //printf("\n%s\n", word);
     int attempts = 0, exit = 0;
     do {
         int color[diff];
