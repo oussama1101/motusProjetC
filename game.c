@@ -194,6 +194,15 @@ void saveInfo(GameInfo *gi){
     fclose(filePtr); // On ferme le fichier qui a été ouvert
 }
 
+void loadGame(char* dirName){
+
+    
+    printf("%s",dirName);
+    getchar();
+    getchar();
+
+}
+
 void saveWord(GameInfo* gi, char* gWord){
     FILE *filePtr;
     char path[50] = "saves/";

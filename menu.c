@@ -1,6 +1,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "game.c"
+#include <dirent.h>
+
 
 void chargeroptions(char* liste[],int n,char* titre){
     printf("\033[36m");printf("  +");
@@ -137,7 +139,36 @@ void nouvellePartie(){
     }
     }
 }
+void listOfGames(){
 
+    int choice = 0,i=0;
+    DIR *d;
+    struct dirent *dir;
+    d = opendir("saves/");
+
+    printf("\033[2J\033[1;1H");
+    char *menu[50];
+    header();
+    if (d)
+    {
+        while ((dir = readdir(d)) != NULL)
+        {   
+            if(dir->d_name[0] != '.'){
+            menu[i] = dir->d_name;
+            i++;
+            }
+        }
+        closedir(d);
+    }
+    chargeroptions(menu,i," Liste des sauvegardes ");
+    
+    do{
+        scanf("%d",&choice);
+    }while(choice > i);
+    loadGame(menu[choice-1]);
+    
+
+}
 void menuPrincipale(){
     int choice = 0;
     while (choice != 4) {
@@ -151,7 +182,7 @@ void menuPrincipale(){
                 nouvellePartie();
                 break;
             case 2:
-                printf("You typed 2");
+                listOfGames();
                 break;
             case 3:
                 printf("Vous pouvez visitez ce lien : ");
