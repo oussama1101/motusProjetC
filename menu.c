@@ -140,13 +140,14 @@ void nouvellePartie(){
 }
 void listOfGames(){
 
-    int choice = 0,i=0;
+    int choice = 0,i=1;
     DIR *d;
     struct dirent *dir;
     d = opendir("saves/");
 
     printf("\033[2J\033[1;1H");
     char *menu[50];
+    menu[0] = "Retour";
     header();
     if (d)
     {
@@ -163,6 +164,9 @@ void listOfGames(){
     do {
         scanf("%d",&choice);
     } while(choice > i);
+    if(choice == 1){
+        return;
+    }
     char path[100] = "saves/";
     strncat(path, menu[choice-1], (int)strlen(menu[choice-1])+1);
     loadGame(path);
