@@ -48,11 +48,13 @@ int lineCount(char* filename) {
     return lines+1;
 }
 
-int validWord(char *word, int len) {
+int validWord(char *word, int len, UserPreferences *up) {
     int valid = 0;
     if(!((word[0] >= 65 && word[0] <= 90) || (word[0] >= 97 && word[0] <= 122)))
         return 0;
     char fileName[30] = "dictionary/";
+    if(up->lang == FRANCAIS)
+        strcpy(fileName, "dictionnaire/");
     strncat(fileName, "WordOf", (int)strlen("WordOf")+1);
     strncat(fileName, digitToStr(len), (int)strlen(digitToStr(len))+1);
     char c = '/';
@@ -108,54 +110,22 @@ void fileChooser(char *fileName, int len) {
 char* verifyUserWord(UserPreferences* up){
     char* fileName = malloc(30 * sizeof(char));
     char* word =  malloc(30 * sizeof(char));
-    switch (up->lang){
-        case ANGLAIS:
-            switch(up->diff){
-                case FACILE:
-                    do {
-                        printf("\033[34m");printf("  [");
-                        printf("\033[33m");printf("Joueur 1");
-                        printf("\033[34m");printf("]");
-                        printf("\033[37m");printf(" Veuillez entrer le ");
-                        printf("\033[34m");printf("Mot");
-                        printf("\033[37m");printf(" a deviner : ");
-                        scanf("%s",word);
-                            printf("\x1b[1F"); // monter le curseur en haut 
-                            printf("\x1b[2K"); // supprimer la ligne de l'affichage
-                    } while(!validWord(word,4));
-                    return word;
-                    break;
-                case MOYENNE:
-                    do {
-                        printf("\033[34m");printf("  [");
-                        printf("\033[33m");printf("Joueur 1");
-                        printf("\033[34m");printf("]");
-                        printf("\033[37m");printf(" Veuillez entrer le ");
-                        printf("\033[34m");printf("Mot");
-                        printf("\033[37m");printf(" a deviner : ");
-                        scanf("%s",word);
-                            printf("\x1b[1F"); // monter le curseur en haut 
-                            printf("\x1b[2K"); // supprimer la ligne de l'affichage
-                    } while(!validWord(word,5));
-                    return word;
-                    break;
-                case DIFFICILE:
-                    do {
-                        printf("\033[34m");printf("  [");
-                        printf("\033[33m");printf("Joueur 1");
-                        printf("\033[34m");printf("]");
-                        printf("\033[37m");printf(" Veuillez entrer le ");
-                        printf("\033[34m");printf("Mot");
-                        printf("\033[37m");printf(" a deviner : ");
-                        scanf("%s",word);
-                            printf("\x1b[1F"); // monter le curseur en haut 
-                            printf("\x1b[2K"); // supprimer la ligne de l'affichage
-                    } while(!validWord(word,4));
-                    return word;
-                    break;
-            }
-            break;
-    }
+    int diff = 0;
+    if(up->diff == FACILE)   diff = 4;
+    else if(up->diff == MOYENNE)    diff = 5;
+    else    diff = 6;
+    do {
+        printf("\033[34m");printf("  [");
+        printf("\033[33m");printf("Joueur 1");
+        printf("\033[34m");printf("]");
+        printf("\033[37m");printf(" Veuillez entrer le ");
+        printf("\033[34m");printf("Mot");
+        printf("\033[37m");printf(" a deviner : ");
+        scanf("%s",word);
+            printf("\x1b[1F"); // monter le curseur en haut 
+            printf("\x1b[2K"); // supprimer la ligne de l'affichage
+    } while(!validWord(word, diff, up));
+    return word;
 }
 
 
@@ -248,13 +218,6 @@ void loadGame(char *dirName){
         exit(-1);
     fscanf(filePtr, "%d\t%d\t%d\n", &vs, &lang, &diff);
     fscanf(filePtr, "%s\t%s\t%s\n", gi->playerName, gi->date, gi->correctWord);
-    if(vs == 0)   up->vs = JOUEUR;
-    else    up->vs = ORDINATEUR; 
-    if(lang == 0)   up->lang = ANGLAIS;
-    else    up->lang = FRANCAIS;
-    if(diff == 0)   up->diff = FACILE;
-    else if(diff == 1)    up->diff = MOYENNE;
-    else    up->diff = DIFFICILE;
     diff = gameInfo(up, gi);
     char* gWord;
     while(!feof(filePtr)){
@@ -307,7 +270,7 @@ void loadGame(char *dirName){
             printf("the right anwser is \033[32m%s\033[39m\n", word);
             break;
         }
-        if(!validWord(gWord, diff)) {
+        if(!validWord(gWord, diff, up)) {
             printf("\x1b[1F");
             printf("\x1b[2K");
         } else {
@@ -425,7 +388,7 @@ void core(UserPreferences *up) {
             printf("the right anwser is \033[32m%s\033[39m\n", word);
             break;
         }
-        if(!validWord(gWord, diff)) {
+        if(!validWord(gWord, diff, up)) {
             printf("\x1b[1F");
             printf("\x1b[2K");
         } else {
