@@ -216,6 +216,50 @@ void saveWord(GameInfo* gi, char* gWord){
     fclose(filePtr); // On ferme le fichier qui a été ouvert
 }
 
+void displayGrid(int diff, char *gWord, int color[], int attempts) {
+    if(attempts==1){
+        for(int i = 0; i < diff; i++){
+            if(i==0){
+                printf("\033[33m");printf(" +");
+                printf("\033[36m");printf("---");
+                printf("\033[33m");printf("+");
+            } else if(i == (diff-1)){
+                printf("\033[36m");printf("---");
+                printf("\033[33m");printf("+\n");
+            } else {
+                printf("\033[36m");printf("---");
+                printf("\033[33m");printf("+");
+            }
+        }
+    }
+    for (int i = 0; i < diff; i++) {
+        printf("\033[36m | ");
+        if(color[i] == 2) {
+            printf("\033[32m%c", gWord[i]);
+        } else if (color[i] == 1) {
+            printf("\033[31m%c", gWord[i]);
+        } else {
+            printf("\033[39m%c", gWord[i]);
+        }
+        if(i == (diff-1))printf("\033[36m |");
+        //printf("%i", color[i]);
+    }
+    for(int i = 0; i < diff; i++){
+        if(i==0){
+            printf("\033[33m");printf("\n +");
+            printf("\033[36m");printf("---");
+            printf("\033[33m");printf("+");
+        } else if(i == (diff-1)){
+            printf("\033[36m");printf("---");
+            printf("\033[33m");printf("+");
+        } else {
+            printf("\033[36m");printf("---");
+            printf("\033[33m");printf("+");
+        }
+    }
+    printf("\n\033[39m");
+}
+
 void core(UserPreferences *up, GameInfo *gi, char *word, char *gWord, int diff, int attempts) {
     int exit = 0;
     struct timeval start_time,end_time;
@@ -225,6 +269,7 @@ void core(UserPreferences *up, GameInfo *gi, char *word, char *gWord, int diff, 
         for(int i = 0; i < diff; i++) {
             color[i] = 0;
         }
+        printf("  ");
         scanf("%s", gWord);
         if(!strcmp(gWord, "exit")) {
             printf("the right anwser is \033[32m%s\033[39m\n", word);
@@ -250,47 +295,7 @@ void core(UserPreferences *up, GameInfo *gi, char *word, char *gWord, int diff, 
             }
             printf("\x1b[1F");
             printf("\x1b[2K");
-            if(attempts==1){
-                for(int i = 0; i < diff; i++){
-                    if(i==0){
-                        printf("\033[33m");printf(" +");
-                        printf("\033[36m");printf("---");
-                        printf("\033[33m");printf("+");
-                    } else if(i == (diff-1)){
-                        printf("\033[36m");printf("---");
-                        printf("\033[33m");printf("+\n");
-                    } else {
-                        printf("\033[36m");printf("---");
-                        printf("\033[33m");printf("+");
-                    }
-                }
-            }
-            for (int i = 0; i < diff; i++) {
-                printf("\033[36m | ");
-                if(color[i] == 2) {
-                    printf("\033[32m%c", gWord[i]);
-                } else if (color[i] == 1) {
-                    printf("\033[31m%c", gWord[i]);
-                } else {
-                    printf("\033[39m%c", gWord[i]);
-                }
-                if(i == (diff-1))printf("\033[36m |");
-                //printf("%i", color[i]);
-            }
-            for(int i = 0; i < diff; i++){
-                if(i==0){
-                    printf("\033[33m");printf("\n +");
-                    printf("\033[36m");printf("---");
-                    printf("\033[33m");printf("+");
-                } else if(i == (diff-1)){
-                    printf("\033[36m");printf("---");
-                    printf("\033[33m");printf("+");
-                } else {
-                    printf("\033[36m");printf("---");
-                    printf("\033[33m");printf("+");
-                }
-            }
-            printf("\n\033[39m");
+            displayGrid(diff, gWord, color, attempts);
             exit = 1;
             for (int i = 0; i < diff; i++) {
                 if(color[i] != 2) {
@@ -309,6 +314,7 @@ void core(UserPreferences *up, GameInfo *gi, char *word, char *gWord, int diff, 
     getchar();
     getchar();
 }
+
 
 void loadGame(char *dirName){
     UserPreferences *up = (UserPreferences*)malloc(sizeof(UserPreferences));
@@ -342,8 +348,6 @@ void loadGame(char *dirName){
         }
         for(int i = 0; i < diff; i++) {
             for(int j = 0; j < diff; j++) {
-                //printf("\n-----%c-----\n", gWord[i]);
-                //printf("\n-----%c-----\n", gi->correctWord[j]);
                 if(gWord[i] == gi->correctWord[j]){
                     color[i] = 1;
                     if(i==j)
@@ -351,47 +355,7 @@ void loadGame(char *dirName){
                 }
             }
         }
-        if(attempts==1){
-            for(int i = 0; i < diff; i++){
-                if(i==0){
-                    printf("\033[33m");printf(" +");
-                    printf("\033[36m");printf("---");
-                    printf("\033[33m");printf("+");
-                } else if(i == (diff-1)){
-                    printf("\033[36m");printf("---");
-                    printf("\033[33m");printf("+\n");
-                } else {
-                    printf("\033[36m");printf("---");
-                    printf("\033[33m");printf("+");
-                }
-            }
-        }
-        for (int i = 0; i < diff; i++) {
-            printf("\033[36m | ");
-            if(color[i] == 2) {
-                printf("\033[32m%c", gWord[i]);
-            } else if (color[i] == 1) {
-                printf("\033[31m%c", gWord[i]);
-            } else {
-                printf("\033[39m%c", gWord[i]);
-            }
-            if(i == (diff-1))printf("\033[36m |");
-            //printf("%i", color[i]);
-        }
-        for(int i = 0; i < diff; i++){
-            if(i==0){
-                printf("\033[33m");printf("\n +");
-                printf("\033[36m");printf("---");
-                printf("\033[33m");printf("+");
-            } else if(i == (diff-1)){
-                printf("\033[36m");printf("---");
-                printf("\033[33m");printf("+");
-            } else {
-                printf("\033[36m");printf("---");
-                printf("\033[33m");printf("+");
-            }
-        }
-        printf("\n\033[39m");
+        displayGrid(diff, gWord, color, attempts);
     }
     fclose(filePtr);
 
@@ -424,7 +388,6 @@ void startGame(UserPreferences *up) {
             //randomWord("eng.txt", word);
         }else{
             randomWord(fileName, word);
-            //printf("%s", word);
         } 
     } else {
         word = verifyUserWord(up);
