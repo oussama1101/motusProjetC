@@ -44,7 +44,6 @@ void ChoixDifficulte(UserPreferences *up){
         "Retour ",
         "Quitter ",
     };
-    while (choice != 5) {
         printf("\033[2J\033[1;1H");
         header();
         chargeroptions(menu,5," Choix de difficulte ");
@@ -70,7 +69,7 @@ void ChoixDifficulte(UserPreferences *up){
         default:
             printf("You typed a wrong number !");
         }
-    }
+    
 }
 
 void ChoixDictionnaire(UserPreferences *up){
@@ -81,7 +80,7 @@ void ChoixDictionnaire(UserPreferences *up){
         "Retour ",
         "Quitter ",
     };
-    while (choice != 4) {
+    
         printf("\033[2J\033[1;1H");
         header();
         chargeroptions(menu, 4, " Choix de langue ");
@@ -103,7 +102,7 @@ void ChoixDictionnaire(UserPreferences *up){
             default:
                 printf("You typed a wrong number !");
         }
-    }
+    
 }
 
 void nouvellePartie(){
@@ -189,8 +188,8 @@ void menuPrincipale(){
                 listOfGames();
                 break;
             case 3:
-                printf("Vous pouvez visitez ce lien : ");
-                break;
+            system("open http://www.google.com");     
+                       break;
             case 4:
                 break;
             default:
