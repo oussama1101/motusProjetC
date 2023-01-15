@@ -295,6 +295,7 @@ void loadGame(char *dirName){
                 } else {
                     printf("\033[39m%c", gWord[i]);
                 }
+                
                 //printf("%i", color[i]);
             }
             printf("\n\033[39m");
@@ -407,6 +408,7 @@ void core(UserPreferences *up) {
             }
             printf("\x1b[1F");
             printf("\x1b[2K");
+            if(attempts==1){
             for(int i = 0; i < diff; i++){
                     if(i==0){
                         printf("\033[33m");printf(" +");
@@ -421,17 +423,17 @@ void core(UserPreferences *up) {
                     }
             
             }
+            }
             for (int i = 0; i < diff; i++) {
+                printf("\033[36m | ");
                 if(color[i] == 2) {
-                    printf("\033[36m | ");
                     printf("\033[32m%c", gWord[i]);
                 } else if (color[i] == 1) {
-                    printf("\033[36m | ");
                     printf("\033[31m%c", gWord[i]);
                 } else {
-                    printf("\033[36m | ");
                     printf("\033[39m%c", gWord[i]);
                 }
+                if(i == (diff-1))printf("\033[36m |");
                 //printf("%i", color[i]);
             }
                         for(int i = 0; i < diff; i++){
