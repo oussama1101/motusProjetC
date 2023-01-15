@@ -1,5 +1,0 @@
-1	0	1
-simo	Sun_Jan_15_03:49:57_2023	major
-clean
-house
-clear
