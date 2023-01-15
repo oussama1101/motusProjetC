@@ -216,8 +216,10 @@ void saveWord(GameInfo* gi, char* gWord){
     fclose(filePtr); // On ferme le fichier qui a été ouvert
 }
 
-int core(UserPreferences *up, GameInfo *gi, char *word, char *gWord, int diff, int attempts) {
+void core(UserPreferences *up, GameInfo *gi, char *word, char *gWord, int diff, int attempts) {
     int exit = 0;
+    struct timeval start_time,end_time;
+    gettimeofday(&start_time, NULL);
     do {
         int color[diff];
         for(int i = 0; i < diff; i++) {
@@ -239,7 +241,8 @@ int core(UserPreferences *up, GameInfo *gi, char *word, char *gWord, int diff, i
             for(int i = 0; i < diff; i++) {
                 for(int j = 0; j < diff; j++) {
                     if(gWord[i] == word[j]){
-                        color[i] = 1;
+                        if(color[i] != 2)
+                            color[i] = 1;
                         if(i==j)
                             color[i] = 2;
                     }
@@ -297,7 +300,14 @@ int core(UserPreferences *up, GameInfo *gi, char *word, char *gWord, int diff, i
             }
         }
     } while (!exit);
-    return attempts;
+    gettimeofday(&end_time, NULL);
+    printf("Your number of attempts is %i\n", attempts);
+    printf("seconds : %ld\n", end_time.tv_sec - start_time.tv_sec);
+    char path[50] = "saves/";
+    getPath(gi, path);
+    remove(path);
+    getchar();
+    getchar();
 }
 
 void loadGame(char *dirName){
@@ -385,21 +395,7 @@ void loadGame(char *dirName){
     }
     fclose(filePtr);
 
-    struct timeval start_time,end_time;
-    gettimeofday(&start_time, NULL);
-    int exit = 0;
-
-    attempts = core(up, gi, gi->correctWord, gWord, diff, attempts);
-
-    gettimeofday(&end_time, NULL);
-    printf("Your number of attempts is %i\n", attempts);
-    printf("seconds : %ld\n", end_time.tv_sec - start_time.tv_sec);
-    char path[50] = "saves/";
-    getPath(gi, path);
-    remove(path);
-    getchar();
-    getchar();
-
+    core(up, gi, gi->correctWord, gWord, diff, attempts);
 }
 
 void startGame(UserPreferences *up) {
@@ -419,14 +415,13 @@ void startGame(UserPreferences *up) {
     printf("\x1b[1F"); // monter le curseur en haut 
     printf("\x1b[2K"); // supprimer la ligne de l'affichage
     diff = gameInfo(up, gi);
-    struct timeval start_time,end_time;
-    gettimeofday(&start_time, NULL);
     char *word = malloc(60*sizeof(char)), *gWord = malloc(60 * sizeof(char));
     if(up->vs == ORDINATEUR) {
         char *fileName = malloc(30 * sizeof(char));
         fileChooser(fileName, diff);
         if(up->lang == ANGLAIS){
             randomWord(fileName, word);
+            //randomWord("eng.txt", word);
         }else{
             randomWord(fileName, word);
             //printf("%s", word);
@@ -449,20 +444,7 @@ void startGame(UserPreferences *up) {
         printf("\033[37m");printf(" a vous de jouer maintenant !\n");
     }
     gi->correctWord = word;
-    gi->date = getCurrentTime();
-    //printf("%s\n",gi->date);
-    //printf("\n%s\n", word);
-    //printf("%s\n",gi->playerName);
-    
+    gi->date = getCurrentTime();    
     int attempts = 0;
-    attempts = core(up, gi, word, gWord, diff, attempts);
-
-    gettimeofday(&end_time, NULL);
-    printf("Your number of attempts is %i\n", attempts);
-    printf("seconds : %ld\n", end_time.tv_sec - start_time.tv_sec);
-    char path[50] = "saves/";
-    getPath(gi, path);
-    remove(path);
-    getchar();
-    getchar();
+    core(up, gi, word, gWord, diff, attempts);
 }
