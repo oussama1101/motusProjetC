@@ -1,0 +1,6 @@
+1	0	1
+oussama	Sun_Jan_15_02:28:42_2023	moves
+clean
+table
+fancy
+phone

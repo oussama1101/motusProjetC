@@ -195,32 +195,10 @@ void saveInfo(GameInfo *gi, UserPreferences *up){
     fclose(filePtr); // On ferme le fichier qui a été ouvert
 }
 
-void loadGame(char *dirName){
-    UserPreferences *up = (UserPreferences*)malloc(sizeof(UserPreferences));
-    GameInfo *gi = (GameInfo*)malloc(sizeof(GameInfo));
-    gi->playerName = (char*)malloc(60 * sizeof(char));
-    gi->date = (char*)malloc(60 * sizeof(char));
-    gi->correctWord = (char*)malloc(60 * sizeof(char));
-    int vs = 0, lang = 0, diff = 0, attempts = 0;
-    FILE *filePtr;
-    filePtr = fopen(dirName, "r");
-    if (filePtr == NULL)
-        exit(-1);
-    fscanf(filePtr, "%d\t%d\t%d\n", &vs, &lang, &diff);
-    fscanf(filePtr, "%s\t%s\t%s\n", gi->playerName, gi->date, gi->correctWord);
-    //printf("%s\n", dirName);
-    if(vs == 0)   up->vs = JOUEUR;
-    else    up->vs = ORDINATEUR; 
-    if(lang == 0)   up->lang = ANGLAIS;
-    else    up->lang = FRANCAIS;
-    if(diff == 0)   up->diff = FACILE;
-    else if(diff == 1)    up->diff = MOYENNE;
-    else    up->diff = DIFFICILE;
-    //printf("%d\t%d\t%d\n", up->vs, up->lang, up->diff);
-    //printf("%s\t%s\t%s\n", gi->playerName, gi->date, gi->correctWord);
+int gameInfo(UserPreferences *up, GameInfo *gi) {
+    int diff = 0;
     printf("\033[2J\033[1;1H"); //clear the terminal
     header();
-
     printf("\033[37m");printf("  Nom du joueur : ");
     printf("\033[33m");printf(" %s \n",gi->playerName);
     printf("\033[37m");printf("  Le mot est en :");
@@ -254,7 +232,30 @@ void loadGame(char *dirName){
     printf("\033[36m");printf("----------------------------------------------------------");
     printf("\033[33m");printf("+\n");
     printf("\033[39m");
-    
+    return diff;
+}
+
+void loadGame(char *dirName){
+    UserPreferences *up = (UserPreferences*)malloc(sizeof(UserPreferences));
+    GameInfo *gi = (GameInfo*)malloc(sizeof(GameInfo));
+    gi->playerName = (char*)malloc(60 * sizeof(char));
+    gi->date = (char*)malloc(60 * sizeof(char));
+    gi->correctWord = (char*)malloc(60 * sizeof(char));
+    int vs = 0, lang = 0, diff = 0, attempts = 0;
+    FILE *filePtr;
+    filePtr = fopen(dirName, "r");
+    if (filePtr == NULL)
+        exit(-1);
+    fscanf(filePtr, "%d\t%d\t%d\n", &vs, &lang, &diff);
+    fscanf(filePtr, "%s\t%s\t%s\n", gi->playerName, gi->date, gi->correctWord);
+    if(vs == 0)   up->vs = JOUEUR;
+    else    up->vs = ORDINATEUR; 
+    if(lang == 0)   up->lang = ANGLAIS;
+    else    up->lang = FRANCAIS;
+    if(diff == 0)   up->diff = FACILE;
+    else if(diff == 1)    up->diff = MOYENNE;
+    else    up->diff = DIFFICILE;
+    diff = gameInfo(up, gi);
     char* gWord;
     while(!feof(filePtr)){
         gWord = malloc(60 * sizeof(char));
@@ -378,40 +379,7 @@ void core(UserPreferences *up) {
     sleep(1);
     printf("\x1b[1F"); // monter le curseur en haut 
     printf("\x1b[2K"); // supprimer la ligne de l'affichage
-    printf("\033[37m");printf("  Nom du joueur : ");
-    printf("\033[33m");printf(" %s \n",gi->playerName);
-    printf("\033[37m");printf("  Le mot est en :");
-    switch(up->lang){
-        case ANGLAIS:
-                printf("\033[33m");printf(" ANGLAIS \n");
-        break;
-        case FRANCAIS:
-            printf("\033[33m");printf(" FRANCAIS \n");
-        break;
-    }
-    printf("\033[37m");printf("  La difficulte du jeu est :");
-    switch(up->diff){
-        case FACILE:
-            diff = 4;
-            printf("\033[33m");printf(" FACILE \n");
-            printf("\033[37m");printf("  Le mot se compose de \033[33m 4 LETTRES \n");
-        break;
-        case MOYENNE:
-            diff = 5;
-            printf("\033[33m");printf(" MOYENNE \n");
-            printf("\033[37m");printf("  Le mot se compose de \033[33m 5 LETTRES \n");
-        break;
-        case DIFFICILE:
-            diff = 6;
-            printf("\033[33m");printf(" DIFFICILE \n");
-            printf("\033[37m");printf("  Le mot se compose de \033[33m 6 LETTRES \n");  
-        break;
-    }    
-    
-    printf("\033[33m");printf("  +");
-    printf("\033[36m");printf("----------------------------------------------------------");
-    printf("\033[33m");printf("+\n");
-    printf("\033[39m");
+    diff = gameInfo(up, gi);
     struct timeval start_time,end_time;
     gettimeofday(&start_time, NULL);
     char *word = malloc(60*sizeof(char)), *gWord = malloc(60 * sizeof(char));
