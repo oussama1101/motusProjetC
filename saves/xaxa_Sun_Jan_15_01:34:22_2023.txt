@@ -1,4 +1,0 @@
-1	0	1
-xaxa	Sun_Jan_15_01:34:22_2023	fancy
-clean
-close

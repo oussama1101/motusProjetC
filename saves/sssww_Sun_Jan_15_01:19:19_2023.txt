@@ -1,5 +1,0 @@
-1	0	1
-sssww	Sun_Jan_15_01:19:19_2023	query
-clean
-clear
-radio

@@ -1,3 +1,0 @@
-1	0	1
-sasddd	Sun_Jan_15_01:36:21_2023	flash
-clean

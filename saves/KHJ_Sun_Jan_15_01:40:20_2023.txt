@@ -1,3 +1,0 @@
-1	0	1
-KHJ	Sun_Jan_15_01:40:20_2023	gates
-clean
