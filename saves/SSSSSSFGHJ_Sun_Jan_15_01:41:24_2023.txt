@@ -1,0 +1,4 @@
+1	0	1
+SSSSSSFGHJ	Sun_Jan_15_01:41:24_2023	river
+clean
+block

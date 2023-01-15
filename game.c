@@ -476,16 +476,48 @@ void core(UserPreferences *up) {
             }
             printf("\x1b[1F");
             printf("\x1b[2K");
+            for(int i = 0; i < diff; i++){
+                    if(i==0){
+                        printf("\033[33m");printf(" +");
+                        printf("\033[36m");printf("---");
+                        printf("\033[33m");printf("+");
+                    }else if(i == (diff-1)){
+                        printf("\033[36m");printf("---");
+                        printf("\033[33m");printf("+\n");
+                    }else {
+                        printf("\033[36m");printf("---");
+                        printf("\033[33m");printf("+");
+                    }
+            
+            }
             for (int i = 0; i < diff; i++) {
                 if(color[i] == 2) {
+                    printf("\033[36m | ");
                     printf("\033[32m%c", gWord[i]);
                 } else if (color[i] == 1) {
+                    printf("\033[36m | ");
                     printf("\033[31m%c", gWord[i]);
                 } else {
+                    printf("\033[36m | ");
                     printf("\033[39m%c", gWord[i]);
                 }
                 //printf("%i", color[i]);
             }
+                        for(int i = 0; i < diff; i++){
+                    if(i==0){
+                        printf("\033[33m");printf("\n +");
+                        printf("\033[36m");printf("---");
+                        printf("\033[33m");printf("+");
+                    }else if(i == (diff-1)){
+                        printf("\033[36m");printf("---");
+                        printf("\033[33m");printf("+");
+                    }else {
+                        printf("\033[36m");printf("---");
+                        printf("\033[33m");printf("+");
+                    }
+            
+            }
+
             printf("\n\033[39m");
             exit = 1;
             for (int i = 0; i < diff; i++) {
