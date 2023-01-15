@@ -218,7 +218,6 @@ void saveWord(GameInfo* gi, char* gWord){
 
 int core(UserPreferences *up, GameInfo *gi, char *word, char *gWord, int diff, int attempts) {
     int exit = 0;
-    printf("%s\n", word);
     do {
         int color[diff];
         for(int i = 0; i < diff; i++) {
@@ -331,8 +330,10 @@ void loadGame(char *dirName){
         for(int i = 0; i < diff; i++) {
             color[i] = 0;
         }
-        for(int i = 0; i < up->diff; i++) {
+        for(int i = 0; i < diff; i++) {
             for(int j = 0; j < diff; j++) {
+                //printf("\n-----%c-----\n", gWord[i]);
+                //printf("\n-----%c-----\n", gi->correctWord[j]);
                 if(gWord[i] == gi->correctWord[j]){
                     color[i] = 1;
                     if(i==j)
@@ -340,7 +341,23 @@ void loadGame(char *dirName){
                 }
             }
         }
+        if(attempts==1){
+            for(int i = 0; i < diff; i++){
+                if(i==0){
+                    printf("\033[33m");printf(" +");
+                    printf("\033[36m");printf("---");
+                    printf("\033[33m");printf("+");
+                } else if(i == (diff-1)){
+                    printf("\033[36m");printf("---");
+                    printf("\033[33m");printf("+\n");
+                } else {
+                    printf("\033[36m");printf("---");
+                    printf("\033[33m");printf("+");
+                }
+            }
+        }
         for (int i = 0; i < diff; i++) {
+            printf("\033[36m | ");
             if(color[i] == 2) {
                 printf("\033[32m%c", gWord[i]);
             } else if (color[i] == 1) {
@@ -348,7 +365,21 @@ void loadGame(char *dirName){
             } else {
                 printf("\033[39m%c", gWord[i]);
             }
+            if(i == (diff-1))printf("\033[36m |");
             //printf("%i", color[i]);
+        }
+        for(int i = 0; i < diff; i++){
+            if(i==0){
+                printf("\033[33m");printf("\n +");
+                printf("\033[36m");printf("---");
+                printf("\033[33m");printf("+");
+            } else if(i == (diff-1)){
+                printf("\033[36m");printf("---");
+                printf("\033[33m");printf("+");
+            } else {
+                printf("\033[36m");printf("---");
+                printf("\033[33m");printf("+");
+            }
         }
         printf("\n\033[39m");
     }
@@ -363,6 +394,9 @@ void loadGame(char *dirName){
     gettimeofday(&end_time, NULL);
     printf("Your number of attempts is %i\n", attempts);
     printf("seconds : %ld\n", end_time.tv_sec - start_time.tv_sec);
+    char path[50] = "saves/";
+    getPath(gi, path);
+    remove(path);
     getchar();
     getchar();
 
@@ -394,7 +428,8 @@ void startGame(UserPreferences *up) {
         if(up->lang == ANGLAIS){
             randomWord(fileName, word);
         }else{
-            randomWord("fr.txt", word);
+            randomWord(fileName, word);
+            //printf("%s", word);
         } 
     } else {
         word = verifyUserWord(up);
