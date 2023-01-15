@@ -44,7 +44,6 @@ void ChoixDifficulte(UserPreferences *up){
         "Retour ",
         "Quitter ",
     };
-    while (choice != 5) {
         printf("\033[2J\033[1;1H");
         header();
         chargeroptions(menu,5," Choix de difficulte ");
@@ -70,7 +69,7 @@ void ChoixDifficulte(UserPreferences *up){
         default:
             printf("You typed a wrong number !");
         }
-    }
+    
 }
 
 void ChoixDictionnaire(UserPreferences *up){
@@ -81,7 +80,7 @@ void ChoixDictionnaire(UserPreferences *up){
         "Retour ",
         "Quitter ",
     };
-    while (choice != 4) {
+    
         printf("\033[2J\033[1;1H");
         header();
         chargeroptions(menu, 4, " Choix de langue ");
@@ -103,7 +102,7 @@ void ChoixDictionnaire(UserPreferences *up){
             default:
                 printf("You typed a wrong number !");
         }
-    }
+    
 }
 
 void nouvellePartie(){
@@ -141,13 +140,14 @@ void nouvellePartie(){
 }
 void listOfGames(){
 
-    int choice = 0,i=0;
+    int choice = 0,i=1;
     DIR *d;
     struct dirent *dir;
     d = opendir("saves/");
 
     printf("\033[2J\033[1;1H");
     char *menu[50];
+    menu[0] = "Retour";
     header();
     if (d)
     {
@@ -164,6 +164,9 @@ void listOfGames(){
     do {
         scanf("%d",&choice);
     } while(choice > i);
+    if(choice == 1){
+        return;
+    }
     char path[100] = "saves/";
     strncat(path, menu[choice-1], (int)strlen(menu[choice-1])+1);
     loadGame(path);
@@ -189,8 +192,8 @@ void menuPrincipale(){
                 listOfGames();
                 break;
             case 3:
-                printf("Vous pouvez visitez ce lien : ");
-                break;
+            system("open http://www.google.com");     
+                       break;
             case 4:
                 break;
             default:
