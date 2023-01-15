@@ -170,7 +170,7 @@ int gameInfo(UserPreferences *up, GameInfo *gi) {
     printf("\033[2J\033[1;1H"); //clear the terminal
     header();
     printf("\033[37m");printf("  Nom du joueur : ");
-    printf("\033[33m");printf(" %s \n",gi->playerName);
+    printf("\033[33m");printf(" %s \n", gi->playerName);
     printf("\033[37m");printf("  Le mot est en :");
     switch(up->lang){
         case ANGLAIS:
@@ -205,6 +205,102 @@ int gameInfo(UserPreferences *up, GameInfo *gi) {
     return diff;
 }
 
+void saveWord(GameInfo* gi, char* gWord){
+    FILE *filePtr;
+    char path[50] = "saves/";
+    getPath(gi, path);
+    filePtr = fopen(path, "a");
+    if (filePtr != NULL) {
+        fprintf(filePtr, "%s\n", gWord);   
+    }
+    fclose(filePtr); // On ferme le fichier qui a été ouvert
+}
+
+int core(UserPreferences *up, GameInfo *gi, char *word, char *gWord, int diff, int attempts) {
+    int exit = 0;
+    printf("%s\n", word);
+    do {
+        int color[diff];
+        for(int i = 0; i < diff; i++) {
+            color[i] = 0;
+        }
+        scanf("%s", gWord);
+        if(!strcmp(gWord, "exit")) {
+            printf("the right anwser is \033[32m%s\033[39m\n", word);
+            break;
+        }
+        if(!validWord(gWord, diff, up)) {
+            printf("\x1b[1F");
+            printf("\x1b[2K");
+        } else {
+            attempts++;
+            if(attempts == 1)
+                saveInfo(gi, up);
+            saveWord(gi, gWord);
+            for(int i = 0; i < diff; i++) {
+                for(int j = 0; j < diff; j++) {
+                    if(gWord[i] == word[j]){
+                        color[i] = 1;
+                        if(i==j)
+                            color[i] = 2;
+                    }
+                }
+            }
+            printf("\x1b[1F");
+            printf("\x1b[2K");
+            if(attempts==1){
+                for(int i = 0; i < diff; i++){
+                    if(i==0){
+                        printf("\033[33m");printf(" +");
+                        printf("\033[36m");printf("---");
+                        printf("\033[33m");printf("+");
+                    } else if(i == (diff-1)){
+                        printf("\033[36m");printf("---");
+                        printf("\033[33m");printf("+\n");
+                    } else {
+                        printf("\033[36m");printf("---");
+                        printf("\033[33m");printf("+");
+                    }
+                }
+            }
+            for (int i = 0; i < diff; i++) {
+                printf("\033[36m | ");
+                if(color[i] == 2) {
+                    printf("\033[32m%c", gWord[i]);
+                } else if (color[i] == 1) {
+                    printf("\033[31m%c", gWord[i]);
+                } else {
+                    printf("\033[39m%c", gWord[i]);
+                }
+                if(i == (diff-1))printf("\033[36m |");
+                //printf("%i", color[i]);
+            }
+            for(int i = 0; i < diff; i++){
+                if(i==0){
+                    printf("\033[33m");printf("\n +");
+                    printf("\033[36m");printf("---");
+                    printf("\033[33m");printf("+");
+                } else if(i == (diff-1)){
+                    printf("\033[36m");printf("---");
+                    printf("\033[33m");printf("+");
+                } else {
+                    printf("\033[36m");printf("---");
+                    printf("\033[33m");printf("+");
+                }
+            }
+            printf("\n\033[39m");
+            exit = 1;
+            for (int i = 0; i < diff; i++) {
+                if(color[i] != 2) {
+                    exit = 0;
+                    break;
+                }
+            }
+        }
+    } while (!exit);
+    return attempts;
+}
+
 void loadGame(char *dirName){
     UserPreferences *up = (UserPreferences*)malloc(sizeof(UserPreferences));
     GameInfo *gi = (GameInfo*)malloc(sizeof(GameInfo));
@@ -217,6 +313,13 @@ void loadGame(char *dirName){
     if (filePtr == NULL)
         exit(-1);
     fscanf(filePtr, "%d\t%d\t%d\n", &vs, &lang, &diff);
+    if(vs == 0)   up->vs = JOUEUR;
+    else    up->vs = ORDINATEUR; 
+    if(lang == 0)   up->lang = ANGLAIS;
+    else    up->lang = FRANCAIS;
+    if(diff == 0)   up->diff = FACILE;
+    else if(diff == 1)    up->diff = MOYENNE;
+    else    up->diff = DIFFICILE;
     fscanf(filePtr, "%s\t%s\t%s\n", gi->playerName, gi->date, gi->correctWord);
     diff = gameInfo(up, gi);
     char* gWord;
@@ -253,61 +356,10 @@ void loadGame(char *dirName){
 
     struct timeval start_time,end_time;
     gettimeofday(&start_time, NULL);
-    char *word = malloc(60*sizeof(char));
-    word = gi->correctWord;
-    //printf("%s\n",gi->date);
-    //printf("\n%s\n", word);
     int exit = 0;
-    //printf("%s\n",gi->playerName);
-    //printf("%s\n",gi->correctWord);
-    do {
-        int color[diff];
-        for(int i = 0; i < diff; i++) {
-            color[i] = 0;
-        }
-        scanf("%s", gWord);
-        if(!strcmp(gWord, "exit")) {
-            printf("the right anwser is \033[32m%s\033[39m\n", word);
-            break;
-        }
-        if(!validWord(gWord, diff, up)) {
-            printf("\x1b[1F");
-            printf("\x1b[2K");
-        } else {
-            attempts++;
-            
-            for(int i = 0; i < diff; i++) {
-                for(int j = 0; j < diff; j++) {
-                    if(gWord[i] == word[j]){
-                        color[i] = 1;
-                        if(i==j)
-                            color[i] = 2;
-                    }
-                }
-            }
-            printf("\x1b[1F");
-            printf("\x1b[2K");
-            for (int i = 0; i < diff; i++) {
-                if(color[i] == 2) {
-                    printf("\033[32m%c", gWord[i]);
-                } else if (color[i] == 1) {
-                    printf("\033[31m%c", gWord[i]);
-                } else {
-                    printf("\033[39m%c", gWord[i]);
-                }
-                
-                //printf("%i", color[i]);
-            }
-            printf("\n\033[39m");
-            exit = 1;
-            for (int i = 0; i < diff; i++) {
-                if(color[i] != 2) {
-                    exit = 0;
-                    break;
-                }
-            }
-        }
-    } while (!exit);
+
+    attempts = core(up, gi, gi->correctWord, gWord, diff, attempts);
+
     gettimeofday(&end_time, NULL);
     printf("Your number of attempts is %i\n", attempts);
     printf("seconds : %ld\n", end_time.tv_sec - start_time.tv_sec);
@@ -316,18 +368,7 @@ void loadGame(char *dirName){
 
 }
 
-void saveWord(GameInfo* gi, char* gWord){
-    FILE *filePtr;
-    char path[50] = "saves/";
-    getPath(gi, path);
-    filePtr = fopen(path, "a");
-    if (filePtr != NULL) {
-        fprintf(filePtr, "%s\n", gWord);   
-    }
-    fclose(filePtr); // On ferme le fichier qui a été ouvert
-}
-
-void core(UserPreferences *up) {
+void startGame(UserPreferences *up) {
     int diff = 0;
     GameInfo *gi = (GameInfo*)malloc(sizeof(GameInfo));
     gi->playerName = (char*)malloc(60 * sizeof(char));
@@ -376,91 +417,11 @@ void core(UserPreferences *up) {
     gi->date = getCurrentTime();
     //printf("%s\n",gi->date);
     //printf("\n%s\n", word);
-    int attempts = 0, exit = 0;
     //printf("%s\n",gi->playerName);
-    printf("%s\n",gi->correctWord);
-    do {
-        int color[diff];
-        for(int i = 0; i < diff; i++) {
-            color[i] = 0;
-        }
-        scanf("%s", gWord);
-        if(!strcmp(gWord, "exit")) {
-            printf("the right anwser is \033[32m%s\033[39m\n", word);
-            break;
-        }
-        if(!validWord(gWord, diff, up)) {
-            printf("\x1b[1F");
-            printf("\x1b[2K");
-        } else {
-            attempts++;
-            if(attempts == 1)
-                saveInfo(gi, up);
-            saveWord(gi, gWord);
-            for(int i = 0; i < diff; i++) {
-                for(int j = 0; j < diff; j++) {
-                    if(gWord[i] == word[j]){
-                        color[i] = 1;
-                        if(i==j)
-                            color[i] = 2;
-                    }
-                }
-            }
-            printf("\x1b[1F");
-            printf("\x1b[2K");
-            if(attempts==1){
-            for(int i = 0; i < diff; i++){
-                    if(i==0){
-                        printf("\033[33m");printf(" +");
-                        printf("\033[36m");printf("---");
-                        printf("\033[33m");printf("+");
-                    }else if(i == (diff-1)){
-                        printf("\033[36m");printf("---");
-                        printf("\033[33m");printf("+\n");
-                    }else {
-                        printf("\033[36m");printf("---");
-                        printf("\033[33m");printf("+");
-                    }
-            
-            }
-            }
-            for (int i = 0; i < diff; i++) {
-                printf("\033[36m | ");
-                if(color[i] == 2) {
-                    printf("\033[32m%c", gWord[i]);
-                } else if (color[i] == 1) {
-                    printf("\033[31m%c", gWord[i]);
-                } else {
-                    printf("\033[39m%c", gWord[i]);
-                }
-                if(i == (diff-1))printf("\033[36m |");
-                //printf("%i", color[i]);
-            }
-                        for(int i = 0; i < diff; i++){
-                    if(i==0){
-                        printf("\033[33m");printf("\n +");
-                        printf("\033[36m");printf("---");
-                        printf("\033[33m");printf("+");
-                    }else if(i == (diff-1)){
-                        printf("\033[36m");printf("---");
-                        printf("\033[33m");printf("+");
-                    }else {
-                        printf("\033[36m");printf("---");
-                        printf("\033[33m");printf("+");
-                    }
-            
-            }
+    
+    int attempts = 0;
+    attempts = core(up, gi, word, gWord, diff, attempts);
 
-            printf("\n\033[39m");
-            exit = 1;
-            for (int i = 0; i < diff; i++) {
-                if(color[i] != 2) {
-                    exit = 0;
-                    break;
-                }
-            }
-        }
-    } while (!exit);
     gettimeofday(&end_time, NULL);
     printf("Your number of attempts is %i\n", attempts);
     printf("seconds : %ld\n", end_time.tv_sec - start_time.tv_sec);

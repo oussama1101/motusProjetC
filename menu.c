@@ -52,15 +52,15 @@ void ChoixDifficulte(UserPreferences *up){
         switch ( choice ){
         case 1:
             up->diff = FACILE;
-            core(up);
+            startGame(up);
             break;
         case 2:
             up->diff = MOYENNE;
-            core(up);
+            startGame(up);
             break;
         case 3:
             up->diff = DIFFICILE;
-            core(up);
+            startGame(up);
             break;
         case 4:
             break;
