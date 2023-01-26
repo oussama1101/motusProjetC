@@ -44,32 +44,31 @@ void ChoixDifficulte(UserPreferences *up){
         "Retour ",
         "Quitter ",
     };
-        printf("\033[2J\033[1;1H");
-        header();
-        chargeroptions(menu,5," Choix de difficulte ");
-        scanf("%d",&choice);
-        switch ( choice ){
-        case 1:
-            up->diff = FACILE;
-            startGame(up);
-            break;
-        case 2:
-            up->diff = MOYENNE;
-            startGame(up);
-            break;
-        case 3:
-            up->diff = DIFFICILE;
-            startGame(up);
-            break;
-        case 4:
-            break;
-        case 5:
-            exit(0);
-            break;
-        default:
-            printf("You typed a wrong number !");
-        }
-    
+    printf("\033[2J\033[1;1H");
+    header();
+    chargeroptions(menu,5," Choix de difficulte ");
+    scanf("%d",&choice);
+    switch ( choice ){
+    case 1:
+        up->diff = FACILE;
+        startGame(up);
+        break;
+    case 2:
+        up->diff = MOYENNE;
+        startGame(up);
+        break;
+    case 3:
+        up->diff = DIFFICILE;
+        startGame(up);
+        break;
+    case 4:
+        break;
+    case 5:
+        exit(0);
+        break;
+    default:
+        printf("You typed a wrong number !");
+    }
 }
 
 void ChoixDictionnaire(UserPreferences *up){
