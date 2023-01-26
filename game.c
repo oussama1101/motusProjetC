@@ -23,6 +23,7 @@ typedef struct gameInfo{
     int timePlayed;
 } GameInfo;
 
+
 char toLower(char c) {
     if(c >= 'a' && c <= 'z')
         return c;

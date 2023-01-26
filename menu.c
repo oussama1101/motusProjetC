@@ -3,7 +3,6 @@
 #include "game.c"
 #include <dirent.h>
 
-
 void chargeroptions(char* liste[],int n,char* titre){
     printf("\033[36m");printf("  +");
     printf("\033[37m");printf("----------------------------------------------------------");
@@ -171,6 +170,41 @@ void listOfGames(){
     strncat(path, menu[choice-1], (int)strlen(menu[choice-1])+1);
     loadGame(path);
 }
+
+void RegleDuJeu(){
+    int var=0;
+    printf("\033[2J\033[1;1H");
+    header();
+    printf("\033[36m");printf("  +");
+    printf("\033[37m");printf("----------------------------------------------------------");
+    printf("\033[36m");printf("+\n");
+    printf("\033[37m");printf("  |   ");
+    printf("\033[36m");printf("N");
+    printf("\033[37m");printf("   |");
+    printf("\033[35m");printf(" Regles du jeu");
+    printf("\033[37m");printf("\n");
+    printf("\033[36m");printf("  +");
+    printf("\033[37m");printf("----------------------------------------------------------");
+    printf("\033[36m");printf("+\n");
+    printf("\033[37m");
+    printf("\tLe jeu repose sur la recherche de mots d'un nombre \n\tfixé de lettres. Un candidat propose un mot et doit \n\tépeler celui-ci.Le mot doit contenir le bon nombre \n\tde lettres et être correctement orthographié, sinon \n\til est refusé. Le mot apparaît alors sur une grille.");
+    printf("\n\tLégende :\n\tCouleur blanche : Mauvaise lettre\n\tCouleur \033[31mrouge\033[37m : Lettre en mauvaise plac\n\tCouleur \033[32mverte\033[37m : Bonne lettre");
+    printf("\033[36m");printf("\n  +");
+    printf("\033[37m");printf("----------------------------------------------------------");
+    printf("\033[36m");printf("+\n");
+    printf("\033[34m");printf("  [");
+    printf("\033[33m");printf("!");
+    printf("\033[34m");printf("]");
+    printf("\033[37m");printf("Tapez");
+    printf("\033[34m");printf(" 1 ");
+    printf("\033[37m");printf("pour revenir au menu principale du jeu : ");
+    scanf("%d",&var);
+    if(var == 1){
+        return;
+    }
+
+
+}
 void menuPrincipale(){
     int choice = 0;
     while (choice != 4) {
@@ -192,7 +226,8 @@ void menuPrincipale(){
                 listOfGames();
                 break;
             case 3:
-            system("open http://www.google.com");     
+            //system("open http://www.google.com"); 
+            RegleDuJeu();    
                        break;
             case 4:
                 break;
